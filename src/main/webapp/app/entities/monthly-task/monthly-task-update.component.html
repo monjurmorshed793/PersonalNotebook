@@ -1,0 +1,68 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-monthly-task-heading">Create or edit a Monthly Task</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!monthlyTask.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="monthlyTask.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_monthType">Month Type</label>
+                    <select class="form-control" name="monthType" [(ngModel)]="monthlyTask.monthType" id="field_monthType" >
+                        <option value="JANUARY">JANUARY</option>
+                        <option value="FEBRUARY">FEBRUARY</option>
+                        <option value="MARCH">MARCH</option>
+                        <option value="APRIL">APRIL</option>
+                        <option value="MAY">MAY</option>
+                        <option value="JUNE">JUNE</option>
+                        <option value="JULY">JULY</option>
+                        <option value="SEPTEMBER">SEPTEMBER</option>
+                        <option value="OCTOBER">OCTOBER</option>
+                        <option value="NOVEMBER">NOVEMBER</option>
+                        <option value="DECEMBER">DECEMBER</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_task">Task</label>
+                    <input type="text" class="form-control" name="task" id="field_task"
+                        [(ngModel)]="monthlyTask.task" required/>
+                    <div [hidden]="!(editForm.controls.task?.dirty && editForm.controls.task?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.task?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_description">Description</label>
+                    <input type="text" class="form-control" name="description" id="field_description"
+                        [(ngModel)]="monthlyTask.description" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_completed">Completed</label>
+                    <input type="checkbox" class="form-control" name="completed" id="field_completed"
+                        [(ngModel)]="monthlyTask.completed" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_user">User</label>
+                    <select class="form-control" id="field_user" name="user" [(ngModel)]="monthlyTask.user" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="userOption.id === monthlyTask.user?.id ? monthlyTask.user : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.id}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

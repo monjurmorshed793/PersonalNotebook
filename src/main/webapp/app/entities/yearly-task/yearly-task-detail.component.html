@@ -1,0 +1,43 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="yearlyTask">
+            <h2><span>Yearly Task</span> {{yearlyTask.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Year</span></dt>
+                <dd>
+                    <span>{{yearlyTask.year}}</span>
+                </dd>
+                <dt><span>Task</span></dt>
+                <dd>
+                    <span>{{yearlyTask.task}}</span>
+                </dd>
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{yearlyTask.description}}</span>
+                </dd>
+                <dt><span>Completed</span></dt>
+                <dd>
+                    <span>{{yearlyTask.completed}}</span>
+                </dd>
+                <dt><span>User</span></dt>
+                <dd>
+                    {{yearlyTask.user?.id}}
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/yearly-task', yearlyTask.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

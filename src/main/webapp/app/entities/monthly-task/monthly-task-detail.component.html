@@ -1,0 +1,43 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="monthlyTask">
+            <h2><span>Monthly Task</span> {{monthlyTask.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Month Type</span></dt>
+                <dd>
+                    <span>{{monthlyTask.monthType}}</span>
+                </dd>
+                <dt><span>Task</span></dt>
+                <dd>
+                    <span>{{monthlyTask.task}}</span>
+                </dd>
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{monthlyTask.description}}</span>
+                </dd>
+                <dt><span>Completed</span></dt>
+                <dd>
+                    <span>{{monthlyTask.completed}}</span>
+                </dd>
+                <dt><span>User</span></dt>
+                <dd>
+                    {{monthlyTask.user?.id}}
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/monthly-task', monthlyTask.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

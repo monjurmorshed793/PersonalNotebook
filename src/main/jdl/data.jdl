@@ -1,0 +1,41 @@
+
+entity DailyTask{
+  date Instant required
+  task String required
+  description String
+  completed Boolean
+}
+
+enum MonthType{
+   JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE, JULY, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER
+}
+
+entity MonthlyTask{
+  monthType MonthType,
+  task String required
+  description String
+  completed Boolean
+}
+
+
+entity YearlyTask{
+  year Integer,
+  task String required
+  description String
+  completed Boolean
+}
+
+
+
+
+
+relationship ManyToOne {
+    DailyTask{user} to User,
+    MonthlyTask{user} to User,
+    YearlyTask{user} to User
+}
+
+
+
+service * with serviceClass
+paginate DailyTask, MonthlyTask, YearlyTask with pagination
