@@ -3,6 +3,8 @@ package com.personal.notebook.service;
 import com.personal.notebook.domain.DailyTask;
 import com.personal.notebook.repository.DailyTaskRepository;
 import com.personal.notebook.repository.search.DailyTaskSearchRepository;
+import com.personal.notebook.security.AuthoritiesConstants;
+import com.personal.notebook.security.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.security.Principal;
 import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -47,7 +50,7 @@ public class DailyTaskService {
     }
 
     /**
-     * Get all the dailyTasks.
+     * Get all the dailyTasks (user will get user specific).
      *
      * @param pageable the pagination information
      * @return the list of entities
@@ -55,7 +58,10 @@ public class DailyTaskService {
     @Transactional(readOnly = true)
     public Page<DailyTask> findAll(Pageable pageable) {
         log.debug("Request to get all DailyTasks");
-        return dailyTaskRepository.findAll(pageable);
+        if(SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN))
+            return dailyTaskRepository.findAll(pageable);
+        else
+            return dailyTaskRepository.findByUserIsCurrentUser(pageable);
     }
 
 

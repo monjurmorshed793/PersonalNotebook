@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -45,6 +46,7 @@ import com.personal.notebook.domain.enumeration.MonthType;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PersonalNotebookApp.class)
+@WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"}, password = "admin")
 public class MonthlyTaskResourceIntTest {
 
     private static final MonthType DEFAULT_MONTH_TYPE = MonthType.JANUARY;

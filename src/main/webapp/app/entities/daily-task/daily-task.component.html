@@ -29,23 +29,24 @@
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="id" *jhiHasAnyAuthority="ADMIN"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="date"><span>Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="task"><span>Task</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="completed"><span>Completed</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="user.id"><span>User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="user.id" *jhiHasAnyAuthority="ADMIN"><span>User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let dailyTask of dailyTasks ;trackBy: trackId">
-                <td><a [routerLink]="['/daily-task', dailyTask.id, 'view' ]">{{dailyTask.id}}</a></td>
+                <td *jhiHasAnyAuthority="ADMIN"><a [routerLink]="['/daily-task', dailyTask.id, 'view' ]">{{dailyTask.id}}</a></td>
                 <td>{{dailyTask.date | date:'medium'}}</td>
                 <td>{{dailyTask.task}}</td>
                 <td>{{dailyTask.description}}</td>
-                <td>{{dailyTask.completed}}</td>
-                <td>
+                <td><input type="checkbox" disabled="true"
+                           [(ngModel)]="dailyTask.completed" /></td>
+                <td *jhiHasAnyAuthority="ADMIN">
                     {{dailyTask.user?.id}}
                 </td>
                 <td class="text-right">

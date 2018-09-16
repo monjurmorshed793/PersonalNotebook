@@ -4,7 +4,7 @@
             <h2 id="jhi-daily-task-heading">Create or edit a Daily Task</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
-                <div class="form-group" [hidden]="!dailyTask.id">
+                <div class="form-group" [hidden]="!dailyTask.id" *jhiHasAnyAuthority="ADMIN">
                     <label for="id">ID</label>
                     <input type="text" class="form-control" id="id" name="id"
                         [(ngModel)]="dailyTask.id" readonly />
@@ -48,7 +48,7 @@
                         [(ngModel)]="dailyTask.completed" />
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" *jhiHasAnyAuthority="ADMIN">
                     <label class="form-control-label" for="field_user">User</label>
                     <select class="form-control" id="field_user" name="user" [(ngModel)]="dailyTask.user" >
                         <option [ngValue]="null"></option>

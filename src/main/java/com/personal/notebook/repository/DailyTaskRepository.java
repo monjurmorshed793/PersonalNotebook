@@ -1,9 +1,12 @@
 package com.personal.notebook.repository;
 
 import com.personal.notebook.domain.DailyTask;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
+import java.security.Principal;
 import java.util.List;
 
 /**
@@ -14,6 +17,6 @@ import java.util.List;
 public interface DailyTaskRepository extends JpaRepository<DailyTask, Long> {
 
     @Query("select daily_task from DailyTask daily_task where daily_task.user.login = ?#{principal.username}")
-    List<DailyTask> findByUserIsCurrentUser();
+    Page<DailyTask> findByUserIsCurrentUser(Pageable pageable);
 
 }

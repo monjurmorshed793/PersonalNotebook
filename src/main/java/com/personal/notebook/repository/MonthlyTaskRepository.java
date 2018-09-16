@@ -1,6 +1,8 @@
 package com.personal.notebook.repository;
 
 import com.personal.notebook.domain.MonthlyTask;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +16,6 @@ import java.util.List;
 public interface MonthlyTaskRepository extends JpaRepository<MonthlyTask, Long> {
 
     @Query("select monthly_task from MonthlyTask monthly_task where monthly_task.user.login = ?#{principal.username}")
-    List<MonthlyTask> findByUserIsCurrentUser();
+    Page<MonthlyTask> findByUserIsCurrentUser(Pageable pageable);
 
 }

@@ -3,6 +3,8 @@ package com.personal.notebook.service;
 import com.personal.notebook.domain.MonthlyTask;
 import com.personal.notebook.repository.MonthlyTaskRepository;
 import com.personal.notebook.repository.search.MonthlyTaskSearchRepository;
+import com.personal.notebook.security.AuthoritiesConstants;
+import com.personal.notebook.security.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +49,7 @@ public class MonthlyTaskService {
     }
 
     /**
-     * Get all the monthlyTasks.
+     * Get all the monthlyTasks (user will get user specific).
      *
      * @param pageable the pagination information
      * @return the list of entities
@@ -55,7 +57,10 @@ public class MonthlyTaskService {
     @Transactional(readOnly = true)
     public Page<MonthlyTask> findAll(Pageable pageable) {
         log.debug("Request to get all MonthlyTasks");
-        return monthlyTaskRepository.findAll(pageable);
+        if(SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN))
+            return monthlyTaskRepository.findAll(pageable);
+        else
+            return monthlyTaskRepository.findByUserIsCurrentUser(pageable);
     }
 
 

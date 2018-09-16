@@ -21,8 +21,8 @@
                 <dd>
                     <span>{{dailyTask.completed}}</span>
                 </dd>
-                <dt><span>User</span></dt>
-                <dd>
+                <dt *jhiHasAnyAuthority="ADMIN"><span>User</span></dt>
+                <dd *jhiHasAnyAuthority="ADMIN">
                     {{dailyTask.user?.id}}
                 </dd>
             </dl>
