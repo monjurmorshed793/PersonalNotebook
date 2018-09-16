@@ -9,7 +9,7 @@ import javax.validation.constraints.*;
 
 import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Objects;
 
 /**
@@ -29,7 +29,7 @@ public class DailyTask implements Serializable {
 
     @NotNull
     @Column(name = "jhi_date", nullable = false)
-    private Instant date;
+    private LocalDate date;
 
     @NotNull
     @Column(name = "task", nullable = false)
@@ -54,16 +54,16 @@ public class DailyTask implements Serializable {
         this.id = id;
     }
 
-    public Instant getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public DailyTask date(Instant date) {
+    public DailyTask date(LocalDate date) {
         this.date = date;
         return this;
     }
 
-    public void setDate(Instant date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
