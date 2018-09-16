@@ -29,23 +29,24 @@
         <table class="table table-striped">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
-            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="id" *jhiHasAnyAuthority="'ROLE_ADMIN'"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="monthType"><span>Month Type</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="task"><span>Task</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="completed"><span>Completed</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="user.id"><span>User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="user.id" *jhiHasAnyAuthority="ROLE_ADMIN"><span>User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let monthlyTask of monthlyTasks ;trackBy: trackId">
-                <td><a [routerLink]="['/monthly-task', monthlyTask.id, 'view' ]">{{monthlyTask.id}}</a></td>
+                <td *jhiHasAnyAuthority="'ROLE_ADMIN'"><a [routerLink]="['/monthly-task', monthlyTask.id, 'view' ]">{{monthlyTask.id}}</a></td>
                 <td>{{monthlyTask.monthType}}</td>
                 <td>{{monthlyTask.task}}</td>
                 <td>{{monthlyTask.description}}</td>
-                <td>{{monthlyTask.completed}}</td>
-                <td>
+                <td><input type="checkbox" disabled="true"
+                           [(ngModel)]="monthlyTask.completed" /></td>
+                <td *jhiHasAnyAuthority="'ROLE_ADMIN'">
                     {{monthlyTask.user?.id}}
                 </td>
                 <td class="text-right">

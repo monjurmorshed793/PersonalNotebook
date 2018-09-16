@@ -2,14 +2,17 @@ package com.personal.notebook.service;
 
 import com.personal.notebook.domain.MonthlyTask;
 import com.personal.notebook.repository.MonthlyTaskRepository;
+import com.personal.notebook.repository.UserRepository;
 import com.personal.notebook.repository.search.MonthlyTaskSearchRepository;
 import com.personal.notebook.security.AuthoritiesConstants;
 import com.personal.notebook.security.SecurityUtils;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,9 +34,12 @@ public class MonthlyTaskService {
 
     private final MonthlyTaskSearchRepository monthlyTaskSearchRepository;
 
-    public MonthlyTaskService(MonthlyTaskRepository monthlyTaskRepository, MonthlyTaskSearchRepository monthlyTaskSearchRepository) {
+    private final UserRepository userRepository;
+
+    public MonthlyTaskService(MonthlyTaskRepository monthlyTaskRepository, MonthlyTaskSearchRepository monthlyTaskSearchRepository, UserRepository userRepository) {
         this.monthlyTaskRepository = monthlyTaskRepository;
         this.monthlyTaskSearchRepository = monthlyTaskSearchRepository;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -43,7 +49,9 @@ public class MonthlyTaskService {
      * @return the persisted entity
      */
     public MonthlyTask save(MonthlyTask monthlyTask) {
-        log.debug("Request to save MonthlyTask : {}", monthlyTask);        MonthlyTask result = monthlyTaskRepository.save(monthlyTask);
+        monthlyTask.setUser(userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin().get()).get());
+        log.debug("Request to save MonthlyTask : {}", monthlyTask);
+        MonthlyTask result = monthlyTaskRepository.save(monthlyTask);
         monthlyTaskSearchRepository.save(result);
         return result;
     }
@@ -97,5 +105,10 @@ public class MonthlyTaskService {
     @Transactional(readOnly = true)
     public Page<MonthlyTask> search(String query, Pageable pageable) {
         log.debug("Request to search for a page of MonthlyTasks for query {}", query);
-        return monthlyTaskSearchRepository.search(queryStringQuery(query), pageable);    }
+        QueryBuilder queryBuilder = new NativeSearchQueryBuilder()
+            .withQuery(matchPhrasePrefixQuery("task",query).slop(1))
+            .withQuery(matchPhraseQuery("description", query).slop(1))
+            .withQuery(matchPhraseQuery("user.login", SecurityUtils.getCurrentUserLogin().get()))
+            .build().getQuery();
+        return monthlyTaskSearchRepository.search(queryBuilder, pageable);    }
 }

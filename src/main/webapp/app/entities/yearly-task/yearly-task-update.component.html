@@ -4,7 +4,7 @@
             <h2 id="jhi-yearly-task-heading">Create or edit a Yearly Task</h2>
             <div>
                 <jhi-alert-error></jhi-alert-error>
-                <div class="form-group" [hidden]="!yearlyTask.id">
+                <div class="form-group" [hidden]="!yearlyTask.id" *jhiHasAnyAuthority="'ROLE_ADMIN'">
                     <label for="id">ID</label>
                     <input type="text" class="form-control" id="id" name="id"
                         [(ngModel)]="yearlyTask.id" readonly />
@@ -27,8 +27,8 @@
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_description">Description</label>
-                    <input type="text" class="form-control" name="description" id="field_description"
-                        [(ngModel)]="yearlyTask.description" />
+                    <textarea type="text" class="form-control" name="description" rows="5" id="field_description"
+                              [(ngModel)]="yearlyTask.description" ></textarea>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" for="field_completed">Completed</label>
@@ -36,7 +36,7 @@
                         [(ngModel)]="yearlyTask.completed" />
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" *jhiHasAnyAuthority="'ROLE_ADMIN'">
                     <label class="form-control-label" for="field_user">User</label>
                     <select class="form-control" id="field_user" name="user" [(ngModel)]="yearlyTask.user" >
                         <option [ngValue]="null"></option>
