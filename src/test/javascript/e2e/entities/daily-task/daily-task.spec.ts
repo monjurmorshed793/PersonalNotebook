@@ -1,4 +1,4 @@
-import { browser, ExpectedConditions as ec, protractor } from 'protractor';
+import { browser, ExpectedConditions as ec } from 'protractor';
 import { NavBarPage, SignInPage } from '../../page-objects/jhi-page-objects';
 
 import { DailyTaskComponentsPage, DailyTaskUpdatePage } from './daily-task.page-object';
@@ -32,8 +32,8 @@ describe('DailyTask e2e test', () => {
 
     it('should create and save DailyTasks', async () => {
         await dailyTaskComponentsPage.clickOnCreateButton();
-        await dailyTaskUpdatePage.setDateInput('01/01/2001' + protractor.Key.TAB + '02:30AM');
-        expect(await dailyTaskUpdatePage.getDateInput()).toContain('2001-01-01T02:30');
+        await dailyTaskUpdatePage.setDateInput('2000-12-31');
+        expect(await dailyTaskUpdatePage.getDateInput()).toMatch('2000-12-31');
         await dailyTaskUpdatePage.setTaskInput('task');
         expect(await dailyTaskUpdatePage.getTaskInput()).toMatch('task');
         await dailyTaskUpdatePage.setDescriptionInput('description');

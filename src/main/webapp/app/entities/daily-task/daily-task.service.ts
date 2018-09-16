@@ -59,7 +59,7 @@ export class DailyTaskService {
 
     private convertDateFromClient(dailyTask: IDailyTask): IDailyTask {
         const copy: IDailyTask = Object.assign({}, dailyTask, {
-            date: dailyTask.date != null && dailyTask.date.isValid() ? dailyTask.date.toJSON() : null
+            date: dailyTask.date != null && dailyTask.date.isValid() ? dailyTask.date.format(DATE_FORMAT) : null
         });
         return copy;
     }

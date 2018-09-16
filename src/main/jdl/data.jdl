@@ -1,6 +1,6 @@
 
 entity DailyTask{
-  date Instant required
+  date LocalDate required
   task String required
   description String
   completed Boolean
