@@ -19,7 +19,7 @@ export class DailyTaskUpdateComponent implements OnInit {
     isSaving: boolean;
 
     users: IUser[];
-    date: string;
+    dateDp: any;
 
     constructor(
         private jhiAlertService: JhiAlertService,
@@ -47,7 +47,6 @@ export class DailyTaskUpdateComponent implements OnInit {
 
     save() {
         this.isSaving = true;
-        this.dailyTask.date = moment(this.date, DATE_TIME_FORMAT);
         if (this.dailyTask.id !== undefined) {
             this.subscribeToSaveResponse(this.dailyTaskService.update(this.dailyTask));
         } else {
@@ -81,6 +80,5 @@ export class DailyTaskUpdateComponent implements OnInit {
 
     set dailyTask(dailyTask: IDailyTask) {
         this._dailyTask = dailyTask;
-        this.date = moment(dailyTask.date).format(DATE_TIME_FORMAT);
     }
 }

@@ -41,7 +41,7 @@
             <tbody>
             <tr *ngFor="let dailyTask of dailyTasks ;trackBy: trackId">
                 <td *jhiHasAnyAuthority="'ROLE_ADMIN'"><a [routerLink]="['/daily-task', dailyTask.id, 'view' ]">{{dailyTask.id}}</a></td>
-                <td>{{dailyTask.date | date:'medium'}}</td>
+                <td>{{dailyTask.date | date:'mediumDate'}}</td>
                 <td>{{dailyTask.task}}</td>
                 <td>{{dailyTask.description}}</td>
                 <td><input type="checkbox" disabled="true"
