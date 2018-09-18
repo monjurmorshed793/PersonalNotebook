@@ -12,6 +12,7 @@ import { DailyTaskDetailComponent } from './daily-task-detail.component';
 import { DailyTaskUpdateComponent } from './daily-task-update.component';
 import { DailyTaskDeletePopupComponent } from './daily-task-delete-dialog.component';
 import { IDailyTask } from 'app/shared/model/daily-task.model';
+import * as moment from 'moment';
 
 @Injectable({ providedIn: 'root' })
 export class DailyTaskResolve implements Resolve<IDailyTask> {
@@ -22,7 +23,10 @@ export class DailyTaskResolve implements Resolve<IDailyTask> {
         if (id) {
             return this.service.find(id).pipe(map((dailyTask: HttpResponse<DailyTask>) => dailyTask.body));
         }
-        return of(new DailyTask());
+
+        let dailyTask: DailyTask = new DailyTask();
+        dailyTask.date = moment(new Date());
+        return of(dailyTask);
     }
 }
 

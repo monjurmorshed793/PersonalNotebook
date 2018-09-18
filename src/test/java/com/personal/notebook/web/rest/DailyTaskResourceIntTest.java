@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 
@@ -222,6 +223,30 @@ public class DailyTaskResourceIntTest {
             .andExpect(jsonPath("$.[*].task").value(hasItem(DEFAULT_TASK.toString())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].completed").value(hasItem(DEFAULT_COMPLETED.booleanValue())));
+    }
+
+    @Test
+    @Transactional
+    public void getDailyTasksByDate() throws Exception{
+        // Initialize the database
+        dailyTaskRepository.saveAndFlush(dailyTask);
+
+
+        //Convert local date to date string
+        LocalDate defaultDate = DEFAULT_DATE;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedDate = defaultDate.format(formatter);
+
+        //Get dailyTaskList by date
+        restDailyTaskMockMvc.perform(get("/api/daily-tasks/date/"+formattedDate+"?sort=id,desc"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(dailyTask.getId().intValue())))
+            .andExpect(jsonPath("$.[*].date").value(hasItem(DEFAULT_DATE.toString())))
+            .andExpect(jsonPath("$.[*].task").value(hasItem(DEFAULT_TASK.toString())))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
+            .andExpect(jsonPath("$.[*].completed").value(hasItem(DEFAULT_COMPLETED.booleanValue())));
+
     }
     
 

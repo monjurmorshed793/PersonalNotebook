@@ -1,6 +1,7 @@
 package com.personal.notebook.service;
 
 import com.personal.notebook.domain.MonthlyTask;
+import com.personal.notebook.domain.enumeration.MonthType;
 import com.personal.notebook.repository.MonthlyTaskRepository;
 import com.personal.notebook.repository.UserRepository;
 import com.personal.notebook.repository.search.MonthlyTaskSearchRepository;
@@ -71,7 +72,19 @@ public class MonthlyTaskService {
             return monthlyTaskRepository.findByUserIsCurrentUser(pageable);
     }
 
-
+    /**
+     * Get monthly tasks by month type
+     * @param monthType the month type
+     * @param pageable the pagination information
+     * @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public Page<MonthlyTask> findAll(MonthType monthType, Pageable pageable){
+        log.debug("Request to get all MonthlyTasks by month type");
+        if(SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN))
+            return monthlyTaskRepository.findMonthlyTaskByMonthType(monthType, pageable);
+        return monthlyTaskRepository.findMonthlyTaskByMonthTypeAndUserLogin(monthType, SecurityUtils.getCurrentUserLogin().get(), pageable);
+    }
     /**
      * Get one monthlyTask by id.
      *

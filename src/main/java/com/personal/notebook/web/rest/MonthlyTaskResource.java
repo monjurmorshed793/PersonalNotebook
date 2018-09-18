@@ -2,6 +2,7 @@ package com.personal.notebook.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.personal.notebook.domain.MonthlyTask;
+import com.personal.notebook.domain.enumeration.MonthType;
 import com.personal.notebook.service.MonthlyTaskService;
 import com.personal.notebook.web.rest.errors.BadRequestAlertException;
 import com.personal.notebook.web.rest.util.HeaderUtil;
@@ -97,6 +98,21 @@ public class MonthlyTaskResource {
         log.debug("REST request to get a page of MonthlyTasks");
         Page<MonthlyTask> page = monthlyTaskService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/monthly-tasks");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    /**
+     * GET /monthly-tasks : get all the monthlyTasks by month type
+     * @param monthType the month type information
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of monthlyTasks in body
+     */
+    @GetMapping("/monthly-tasks/month-type/{month-type}")
+    @Timed
+    public ResponseEntity<List<MonthlyTask>> getAllMonthlyTaskByMonthType(@PathVariable("month-type") MonthType monthType, Pageable pageable){
+        log.debug("REST request to get a page of month type related MonthlyTasks");
+        Page<MonthlyTask> page = monthlyTaskService.findAll(monthType, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/monthly-tasks/month-type/"+monthType);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 

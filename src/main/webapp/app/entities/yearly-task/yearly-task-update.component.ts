@@ -4,7 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
-import { IYearlyTask } from 'app/shared/model/yearly-task.model';
+import {IYearlyTask, YearlyTask} from 'app/shared/model/yearly-task.model';
 import { YearlyTaskService } from './yearly-task.service';
 import { IUser, UserService } from 'app/core';
 
@@ -29,6 +29,8 @@ export class YearlyTaskUpdateComponent implements OnInit {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ yearlyTask }) => {
             this.yearlyTask = yearlyTask;
+            if(this.yearlyTask = new YearlyTask())
+                this.yearlyTask.year = new Date().getFullYear();
         });
         this.userService.query().subscribe(
             (res: HttpResponse<IUser[]>) => {

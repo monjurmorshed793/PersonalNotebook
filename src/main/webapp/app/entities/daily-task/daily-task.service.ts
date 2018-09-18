@@ -8,6 +8,8 @@ import { map } from 'rxjs/operators';
 import { SERVER_API_URL } from 'app/app.constants';
 import { createRequestOption } from 'app/shared';
 import { IDailyTask } from 'app/shared/model/daily-task.model';
+import {Moment} from "moment";
+import {create} from "domain";
 
 type EntityResponseType = HttpResponse<IDailyTask>;
 type EntityArrayResponseType = HttpResponse<IDailyTask[]>;
@@ -37,6 +39,14 @@ export class DailyTaskService {
         return this.http
             .get<IDailyTask>(`${this.resourceUrl}/${id}`, { observe: 'response' })
             .pipe(map((res: EntityResponseType) => this.convertDateFromServer(res)));
+    }
+
+    findByDate(date:Moment, req?: any): Observable<EntityArrayResponseType>{
+        const options = createRequestOption(req);
+        let dateStr:string = date.format("YYYY-MM-DD");
+        return this.http
+            .get<IDailyTask[]>(`${this.resourceUrl}/date/${dateStr}`, {params:options, observe:'response'})
+            .pipe(map((res: EntityArrayResponseType) => this.convertDateArrayFromServer(res)));
     }
 
     query(req?: any): Observable<EntityArrayResponseType> {

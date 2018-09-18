@@ -25,6 +25,26 @@
         </div>
     </div>
     <br/>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <select class="form-control" name="monthType" [(ngModel)]="defaultMonthType" id="field_monthType"  (change)="monthChanged($event)">
+                    <option value="JANUARY">JANUARY</option>
+                    <option value="FEBRUARY">FEBRUARY</option>
+                    <option value="MARCH">MARCH</option>
+                    <option value="APRIL">APRIL</option>
+                    <option value="MAY">MAY</option>
+                    <option value="JUNE">JUNE</option>
+                    <option value="JULY">JULY</option>
+                    <option value="SEPTEMBER">SEPTEMBER</option>
+                    <option value="OCTOBER">OCTOBER</option>
+                    <option value="NOVEMBER">NOVEMBER</option>
+                    <option value="DECEMBER">DECEMBER</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-sm-6"></div>
+    </div>
     <div class="table-responsive" *ngIf="monthlyTasks">
         <table class="table table-striped">
             <thead>

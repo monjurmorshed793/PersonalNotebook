@@ -30,6 +30,7 @@ export class YearlyTaskComponent implements OnInit, OnDestroy {
     predicate: any;
     previousPage: any;
     reverse: any;
+    defaultYear: number;
 
     constructor(
         private yearlyTaskService: YearlyTaskService,
@@ -80,6 +81,33 @@ export class YearlyTaskComponent implements OnInit, OnDestroy {
             );
     }
 
+    loadAllByYear(year: number){
+        if (this.currentSearch) {
+            this.yearlyTaskService
+                .search({
+                    page: this.page - 1,
+                    query: this.currentSearch,
+                    size: this.itemsPerPage,
+                    sort: this.sort()
+                })
+                .subscribe(
+                    (res: HttpResponse<IYearlyTask[]>) => this.paginateYearlyTasks(res.body, res.headers),
+                    (res: HttpErrorResponse) => this.onError(res.message)
+                );
+            return;
+        }
+        this.yearlyTaskService
+            .findByYear(year,{
+                page: this.page - 1,
+                size: this.itemsPerPage,
+                sort: this.sort()
+            })
+            .subscribe(
+                (res: HttpResponse<IYearlyTask[]>) => this.paginateYearlyTasks(res.body, res.headers),
+                (res: HttpErrorResponse) => this.onError(res.message)
+            );
+    }
+
     loadPage(page: number) {
         if (page !== this.previousPage) {
             this.previousPage = page;
@@ -96,7 +124,8 @@ export class YearlyTaskComponent implements OnInit, OnDestroy {
                 sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
             }
         });
-        this.loadAll();
+        this.loadAllByYear(this.defaultYear);
+
     }
 
     clear() {
@@ -109,7 +138,7 @@ export class YearlyTaskComponent implements OnInit, OnDestroy {
                 sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
             }
         ]);
-        this.loadAll();
+        this.loadAllByYear(this.defaultYear);
     }
 
     search(query) {
@@ -126,11 +155,13 @@ export class YearlyTaskComponent implements OnInit, OnDestroy {
                 sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
             }
         ]);
-        this.loadAll();
+        this.loadAllByYear(this.defaultYear);
+
     }
 
     ngOnInit() {
-        this.loadAll();
+        this.defaultYear = new Date().getFullYear();
+        this.loadAllByYear(this.defaultYear);
         this.principal.identity().then(account => {
             this.currentAccount = account;
         });

@@ -204,6 +204,23 @@ public class MonthlyTaskResourceIntTest {
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].completed").value(hasItem(DEFAULT_COMPLETED.booleanValue())));
     }
+
+    @Test
+    @Transactional
+    public void getAllMonthlyTasksByMonthType() throws Exception {
+        // Initialize the database
+        monthlyTaskRepository.saveAndFlush(monthlyTask);
+
+        // Get all the monthlyTaskList
+        restMonthlyTaskMockMvc.perform(get("/api/monthly-tasks/month-type/"+DEFAULT_MONTH_TYPE+"?sort=id,desc"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(monthlyTask.getId().intValue())))
+            .andExpect(jsonPath("$.[*].monthType").value(hasItem(DEFAULT_MONTH_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].task").value(hasItem(DEFAULT_TASK.toString())))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
+            .andExpect(jsonPath("$.[*].completed").value(hasItem(DEFAULT_COMPLETED.booleanValue())));
+    }
     
 
     @Test

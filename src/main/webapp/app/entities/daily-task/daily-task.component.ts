@@ -9,6 +9,8 @@ import { Principal } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
 import { DailyTaskService } from './daily-task.service';
+import {Moment, now} from 'moment';
+import * as moment from 'moment';
 
 @Component({
     selector: 'jhi-daily-task',
@@ -30,6 +32,7 @@ export class DailyTaskComponent implements OnInit, OnDestroy {
     predicate: any;
     previousPage: any;
     reverse: any;
+    defaultDate: Moment;
 
     constructor(
         private dailyTaskService: DailyTaskService,
@@ -80,6 +83,38 @@ export class DailyTaskComponent implements OnInit, OnDestroy {
             );
     }
 
+    dateChanged(event:any){
+        this.loadAllByDate(this.defaultDate);
+    }
+
+    loadAllByDate(date: Moment){
+        if (this.currentSearch) {
+            this.dailyTaskService
+                .search({
+                    page: this.page - 1,
+                    query: this.currentSearch,
+                    size: this.itemsPerPage,
+                    sort: this.sort()
+                })
+                .subscribe(
+                    (res: HttpResponse<IDailyTask[]>) => this.paginateDailyTasks(res.body, res.headers),
+                    (res: HttpErrorResponse) => this.onError(res.message)
+                );
+            return;
+        }else{
+            this.dailyTaskService
+                .findByDate(date, {
+                    page: this.page - 1,
+                    size: this.itemsPerPage,
+                    sort: this.sort()
+                })
+                .subscribe(
+                    (res: HttpResponse<IDailyTask[]>) => this.paginateDailyTasks(res.body, res.headers),
+                    (res: HttpErrorResponse) => this.onError(res.message)
+                );
+        }
+    }
+
     loadPage(page: number) {
         if (page !== this.previousPage) {
             this.previousPage = page;
@@ -96,7 +131,7 @@ export class DailyTaskComponent implements OnInit, OnDestroy {
                 sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
             }
         });
-        this.loadAll();
+        this.loadAllByDate(this.defaultDate);
     }
 
     clear() {
@@ -109,7 +144,7 @@ export class DailyTaskComponent implements OnInit, OnDestroy {
                 sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
             }
         ]);
-        this.loadAll();
+        this.loadAllByDate(this.defaultDate);
     }
 
     search(query) {
@@ -130,11 +165,13 @@ export class DailyTaskComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.loadAll();
+        this.defaultDate = moment(new Date());
+        this.loadAllByDate(this.defaultDate);
         this.principal.identity().then(account => {
             this.currentAccount = account;
         });
         this.registerChangeInDailyTasks();
+
     }
 
     ngOnDestroy() {

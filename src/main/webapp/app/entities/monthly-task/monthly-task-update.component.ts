@@ -4,7 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { JhiAlertService } from 'ng-jhipster';
 
-import { IMonthlyTask } from 'app/shared/model/monthly-task.model';
+import {IMonthlyTask, MonthlyTask} from 'app/shared/model/monthly-task.model';
 import { MonthlyTaskService } from './monthly-task.service';
 import { IUser, UserService } from 'app/core';
 
@@ -29,6 +29,8 @@ export class MonthlyTaskUpdateComponent implements OnInit {
         this.isSaving = false;
         this.activatedRoute.data.subscribe(({ monthlyTask }) => {
             this.monthlyTask = monthlyTask;
+            if(this.monthlyTask == new MonthlyTask())
+                this.monthlyTask.monthType = this.monthlyTaskService.getMonth(new Date().getMonth());
         });
         this.userService.query().subscribe(
             (res: HttpResponse<IUser[]>) => {

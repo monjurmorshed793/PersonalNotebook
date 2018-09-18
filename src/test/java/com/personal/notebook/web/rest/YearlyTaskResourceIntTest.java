@@ -203,7 +203,23 @@ public class YearlyTaskResourceIntTest {
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].completed").value(hasItem(DEFAULT_COMPLETED.booleanValue())));
     }
-    
+
+    @Test
+    @Transactional
+    public void getAllYearlyTasksByYear() throws Exception {
+        // Initialize the database
+        yearlyTaskRepository.saveAndFlush(yearlyTask);
+
+        // Get all the yearlyTaskList
+        restYearlyTaskMockMvc.perform(get("/api/yearly-tasks/year/"+DEFAULT_YEAR+"?sort=id,desc"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(yearlyTask.getId().intValue())))
+            .andExpect(jsonPath("$.[*].year").value(hasItem(DEFAULT_YEAR)))
+            .andExpect(jsonPath("$.[*].task").value(hasItem(DEFAULT_TASK.toString())))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
+            .andExpect(jsonPath("$.[*].completed").value(hasItem(DEFAULT_COMPLETED.booleanValue())));
+    }
 
     @Test
     @Transactional

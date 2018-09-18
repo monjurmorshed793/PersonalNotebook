@@ -25,6 +25,18 @@
         </div>
     </div>
     <br/>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="form-group">
+                <input type="number" class="form-control" name="year" id="field_year"
+                       [(ngModel)]="defaultYear" />
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <button class="btn-secondary" (click)="loadAllByYear(defaultYear)">Fetch</button>
+        </div>
+        <div class="col-sm-6"></div>
+    </div>
     <div class="table-responsive" *ngIf="yearlyTasks">
         <table class="table table-striped">
             <thead>

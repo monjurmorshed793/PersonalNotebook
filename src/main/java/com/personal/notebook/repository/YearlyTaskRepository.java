@@ -18,4 +18,8 @@ public interface YearlyTaskRepository extends JpaRepository<YearlyTask, Long> {
     @Query("select yearly_task from YearlyTask yearly_task where yearly_task.user.login = ?#{principal.username}")
     Page<YearlyTask> findByUserIsCurrentUser(Pageable pageable);
 
+    Page<YearlyTask> findYearlyTaskByYear(int year, Pageable pageable);
+
+    Page<YearlyTask> findYearlyTaskByYearAndUserLogin(int year, String login, Pageable pageable);
+
 }

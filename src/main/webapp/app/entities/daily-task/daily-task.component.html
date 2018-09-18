@@ -25,6 +25,23 @@
         </div>
     </div>
     <br/>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="form-group">
+                <div class="input-group">
+                    <input id="field_default_date" type="text" class="form-control" name="defaultDate" ngbDatepicker  #dateDp="ngbDatepicker" [(ngModel)]="defaultDate"
+                           required />
+                    <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="dateDp.toggle(); dateChanged($event)"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn-secondary" (click)="loadAllByDate(defaultDate)">Fetch</button>
+        </div>
+        <div class="col-sm-6"></div>
+    </div>
     <div class="table-responsive" *ngIf="dailyTasks">
         <table class="table table-striped">
             <thead>

@@ -22,6 +22,7 @@ export class MonthlyTaskResolve implements Resolve<IMonthlyTask> {
         if (id) {
             return this.service.find(id).pipe(map((monthlyTask: HttpResponse<MonthlyTask>) => monthlyTask.body));
         }
+
         return of(new MonthlyTask());
     }
 }

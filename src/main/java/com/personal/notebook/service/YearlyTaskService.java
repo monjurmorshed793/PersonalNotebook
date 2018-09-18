@@ -72,7 +72,20 @@ public class YearlyTaskService {
             return yearlyTaskRepository.findByUserIsCurrentUser(pageable);
     }
 
+    /**
+     * Get all yearlyTasks by year
+     * @param year the year
+     * @param pageable the pagination information
+     * @return the list of entities
+     */
+    @Transactional(readOnly = true)
+    public Page<YearlyTask> findAll(int year,Pageable pageable) {
+        log.debug("Request to get all YearlyTasks");
+        if(SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN))
+            return yearlyTaskRepository.findYearlyTaskByYear(year, pageable);
 
+        return yearlyTaskRepository.findYearlyTaskByYearAndUserLogin(year, SecurityUtils.getCurrentUserLogin().get(), pageable);
+    }
     /**
      * Get one yearlyTask by id.
      *

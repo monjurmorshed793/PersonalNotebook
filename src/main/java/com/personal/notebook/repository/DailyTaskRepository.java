@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -18,5 +19,9 @@ public interface DailyTaskRepository extends JpaRepository<DailyTask, Long> {
 
     @Query("select daily_task from DailyTask daily_task where daily_task.user.login = ?#{principal.username}")
     Page<DailyTask> findByUserIsCurrentUser(Pageable pageable);
+
+    Page<DailyTask> findDailyTaskByDate(LocalDate localDate, Pageable pageable);
+
+    Page<DailyTask> findDailyTaskByDateAndUserLogin(LocalDate localDate, String login, Pageable pageable);
 
 }

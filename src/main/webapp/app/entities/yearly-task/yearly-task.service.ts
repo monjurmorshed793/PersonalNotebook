@@ -28,6 +28,11 @@ export class YearlyTaskService {
         return this.http.get<IYearlyTask>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
+    findByYear(year: number, req?): Observable<EntityArrayResponseType> {
+        const options = createRequestOption(req);
+        return this.http.get<IYearlyTask[]>(`${this.resourceUrl}/year/${year}`, {params: options, observe: 'response' });
+    }
+
     query(req?: any): Observable<EntityArrayResponseType> {
         const options = createRequestOption(req);
         return this.http.get<IYearlyTask[]>(this.resourceUrl, { params: options, observe: 'response' });

@@ -7,6 +7,7 @@ import com.personal.notebook.web.rest.errors.BadRequestAlertException;
 import com.personal.notebook.web.rest.util.HeaderUtil;
 import com.personal.notebook.web.rest.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
+import org.checkerframework.checker.units.qual.Time;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -97,6 +98,21 @@ public class YearlyTaskResource {
         log.debug("REST request to get a page of YearlyTasks");
         Page<YearlyTask> page = yearlyTaskService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/yearly-tasks");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    /**
+     * GET /yearly-tasks/year/{year}: get all the yearly tasks by year
+     * @param year the year
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of yearlyTasks in body
+     */
+    @GetMapping("/yearly-tasks/year/{year}")
+    @Timed
+    public ResponseEntity<List<YearlyTask>> getAllYearlyTasks(@PathVariable("year") int year, Pageable pageable){
+        log.debug("REST request to get a page of YearlyTaks based on year");
+        Page<YearlyTask> page = yearlyTaskService.findAll(year, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/yearly-tasks/year/"+year);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 

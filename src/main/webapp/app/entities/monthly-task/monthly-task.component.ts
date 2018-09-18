@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 
-import { IMonthlyTask } from 'app/shared/model/monthly-task.model';
+import {IMonthlyTask, MonthType} from 'app/shared/model/monthly-task.model';
 import { Principal } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
@@ -30,7 +30,10 @@ export class MonthlyTaskComponent implements OnInit, OnDestroy {
     predicate: any;
     previousPage: any;
     reverse: any;
-
+    defaultMonthType: MonthType;
+    monthNames = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE",
+        "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"
+    ];
     constructor(
         private monthlyTaskService: MonthlyTaskService,
         private parseLinks: JhiParseLinks,
@@ -80,6 +83,37 @@ export class MonthlyTaskComponent implements OnInit, OnDestroy {
             );
     }
 
+    monthChanged(event:any){
+        this.loadAllByMonthType(this.defaultMonthType);
+    }
+
+    loadAllByMonthType(monthType: MonthType) {
+        if (this.currentSearch) {
+            this.monthlyTaskService
+                .search({
+                    page: this.page - 1,
+                    query: this.currentSearch,
+                    size: this.itemsPerPage,
+                    sort: this.sort()
+                })
+                .subscribe(
+                    (res: HttpResponse<IMonthlyTask[]>) => this.paginateMonthlyTasks(res.body, res.headers),
+                    (res: HttpErrorResponse) => this.onError(res.message)
+                );
+            return;
+        }
+        this.monthlyTaskService
+            .findByMonthType(monthType,{
+                page: this.page - 1,
+                size: this.itemsPerPage,
+                sort: this.sort()
+            })
+            .subscribe(
+                (res: HttpResponse<IMonthlyTask[]>) => this.paginateMonthlyTasks(res.body, res.headers),
+                (res: HttpErrorResponse) => this.onError(res.message)
+            );
+    }
+
     loadPage(page: number) {
         if (page !== this.previousPage) {
             this.previousPage = page;
@@ -96,7 +130,7 @@ export class MonthlyTaskComponent implements OnInit, OnDestroy {
                 sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
             }
         });
-        this.loadAll();
+        this.loadAllByMonthType(this.defaultMonthType);
     }
 
     clear() {
@@ -109,7 +143,7 @@ export class MonthlyTaskComponent implements OnInit, OnDestroy {
                 sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
             }
         ]);
-        this.loadAll();
+        this.loadAllByMonthType(this.defaultMonthType);
     }
 
     search(query) {
@@ -130,7 +164,8 @@ export class MonthlyTaskComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.loadAll();
+        this.defaultMonthType = this.monthlyTaskService.getMonth(new Date().getMonth());
+        this.loadAllByMonthType(this.defaultMonthType);
         this.principal.identity().then(account => {
             this.currentAccount = account;
         });

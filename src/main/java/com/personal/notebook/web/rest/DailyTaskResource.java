@@ -17,9 +17,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -97,6 +100,23 @@ public class DailyTaskResource {
         log.debug("REST request to get a page of DailyTasks");
         Page<DailyTask> page = dailyTaskService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/daily-tasks");
+        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    /**
+     * GET /daily-tasks: get all the dailyTasks by date.
+     * @param date the date
+     * @param pageable the pagination information
+     * @return the ResponseEntity with status 200 (OK) and the list of dailyTasks in body
+     */
+    @GetMapping("/daily-tasks/date/{date}")
+    @Timed
+    public ResponseEntity<List<DailyTask>> getDailyTasksByDate(@PathVariable("date") String date, Pageable pageable){
+        log.debug("REST request to get a page of DailyTasks by date");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate convertedDate = LocalDate.parse(date, formatter);
+        Page<DailyTask> page = dailyTaskService.findAll(convertedDate, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/daily-task/date/"+date);
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 

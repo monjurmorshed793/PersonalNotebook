@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -72,6 +73,20 @@ public class DailyTaskService {
             return dailyTaskRepository.findByUserIsCurrentUser(pageable);
     }
 
+    /**
+     * Get all the dailyTasks by date
+     * @param date the date
+     * @param pageable the pagination information
+     * @return the list of engities
+     */
+    @Transactional(readOnly = true)
+    public Page<DailyTask> findAll(LocalDate date, Pageable pageable){
+        log.debug("Request to get all DailyTasks by date");
+        if(!SecurityUtils.isCurrentUserInRole(AuthoritiesConstants.ADMIN))
+            return dailyTaskRepository.findDailyTaskByDateAndUserLogin(date, SecurityUtils.getCurrentUserLogin().get(), pageable);
+
+        return dailyTaskRepository.findDailyTaskByDate(date, pageable);
+    }
 
     /**
      * Get one dailyTask by id.
